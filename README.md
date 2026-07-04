@@ -69,19 +69,13 @@ Luna (Cat) - 1 tasks
 
 ## 🧪 Testing PawPal+
 
+Run the test suite with:
+
 ```bash
-# Run the full test suite:
-pytest
-
-# Run with coverage:
-pytest --cov
+python -m pytest
 ```
 
-Sample test output:
-
-```
-# Paste your pytest output here
-```
+The tests cover the main scheduling behaviors for PawPal+, including sorting tasks into a sensible order, confirming that completing a recurring daily task creates the next day's task, and detecting duplicate preferred times that could cause scheduling conflicts.
 
 ## 📐 Smarter Scheduling
 

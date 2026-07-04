@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, time, timedelta
 
 from pawpal_system import Owner, Pet, Scheduler, Task
 
@@ -40,6 +40,32 @@ def test_scheduler_filters_tasks_by_completion_and_pet_name():
 
     buddy_tasks = scheduler.filter_tasks(pet_name="buddy")
     assert buddy_tasks == [done_task]
+
+
+def test_sort_by_time_returns_tasks_in_chronological_order():
+    owner = Owner(name="Test Owner")
+    pet = Pet(name="Buddy", species="Dog", age=3)
+    owner.add_pet(pet)
+
+    late_task = Task(
+        title="Late walk",
+        duration_minutes=20,
+        scheduled_date=date(2026, 7, 3),
+        preferred_start_time=time(10, 0),
+    )
+    early_task = Task(
+        title="Early feed",
+        duration_minutes=10,
+        scheduled_date=date(2026, 7, 3),
+        preferred_start_time=time(8, 0),
+    )
+    pet.add_task(late_task)
+    pet.add_task(early_task)
+
+    scheduler = Scheduler(owner=owner, target_date=date(2026, 7, 3))
+    ordered_tasks = scheduler.sort_by_time()
+
+    assert ordered_tasks == [early_task, late_task]
 
 
 def test_recurring_task_completion_creates_next_occurrence():
