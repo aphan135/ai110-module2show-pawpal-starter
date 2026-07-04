@@ -1,3 +1,4 @@
+
 # PawPal+ (Module 2 Project)
 
 You are building **PawPal+**, a Streamlit app that helps a pet owner plan care tasks for their pet.
@@ -9,6 +10,8 @@ A busy pet owner needs help staying consistent with pet care. They want an assis
 - Track pet care tasks (walks, feeding, meds, enrichment, grooming, etc.)
 - Consider constraints (time available, priority, owner preferences)
 - Produce a daily plan and explain why it chose that plan
+
+This project is designed as a pet care app using four main classes: `Owner`, `Pet`, `Task`, and `Schedule`.
 
 Your job is to design the system first (UML), then implement the logic in Python, then connect it to the Streamlit UI.
 
@@ -46,12 +49,22 @@ pip install -r requirements.txt
 
 Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
 
-```
-# e.g.:
-# Daily plan for Biscuit (Golden Retriever):
-#   08:00 — Morning walk (30 min) [priority: high]
-#   09:00 — Feeding (10 min) [priority: high]
-#   ...
+```bash
+--- TODAY'S SCHEDULE ---
+Daily plan for Aaron on 2026-06-30:
+- Give Medicine (medical) - 5 min, priority=high, frequency=once, date=2026-06-30, status=pending
+- Feed Breakfast (feeding) - 10 min, priority=high, frequency=once, date=2026-06-30, status=pending
+- Morning Walk (exercise) - 30 min, priority=high, frequency=once, date=2026-06-30, status=pending
+Total planned duration: 45 minutes
+
+Per-pet breakdown:
+
+Buddy (Dog) - 2 tasks
+ - Feed Breakfast (feeding) - 10 min, priority=high, frequency=once, date=2026-06-30, status=pending
+ - Morning Walk (exercise) - 30 min, priority=high, frequency=once, date=2026-06-30, status=pending
+
+Luna (Cat) - 1 tasks
+ - Give Medicine (medical) - 5 min, priority=high, frequency=once, date=2026-06-30, status=pending
 ```
 
 ## 🧪 Testing PawPal+
@@ -72,14 +85,14 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
+The scheduler now includes a few lightweight features that make daily pet care planning more practical.
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Sorting behavior | `Scheduler.sort_by_time()` | Orders tasks by preferred start time so the plan is easier to follow in the terminal or UI. |
+| Filtering behavior | `Scheduler.filter_tasks()` | Lets the app show tasks by completion status and/or by pet name. |
+| Conflict detection logic | `Scheduler.find_time_conflicts()` | Flags tasks that share the same date and preferred start time so obvious scheduling conflicts are visible. |
+| Recurring task logic | `Task.get_next_occurrence_date()`, `Task.create_next_occurrence()`, `Task.mark_complete()` | When a daily or weekly task is marked complete, the system creates the next occurrence automatically. |
 
 ## 📸 Demo Walkthrough
 
