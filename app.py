@@ -39,7 +39,7 @@ if add_pet_button:
     st.success(f"Added pet {pet_name}.")
 
 if owner.pets:
-    st.write("Current pets:")
+    st.success("Pet roster is ready. Review the current pets below.")
     st.table(
         [{"name": pet.name, "species": pet.species, "age": pet.age, "breed": pet.breed} for pet in owner.pets]
     )
@@ -72,7 +72,9 @@ if owner.pets:
         st.success(f"Added task '{task_title}' to {selected_pet.name}.")
 
     if selected_pet.tasks:
-        st.write(f"Tasks for {selected_pet.name}:")
+        scheduler = Scheduler(owner=owner, target_date=date.today())
+        sorted_tasks = scheduler.sort_by_time(selected_pet.tasks)
+        st.success(f"Tasks for {selected_pet.name} are sorted by preferred start time.")
         st.table(
             [
                 {
@@ -80,8 +82,9 @@ if owner.pets:
                     "duration": task.duration_minutes,
                     "priority": task.priority,
                     "category": task.category,
+                    "preferred_start": task.preferred_start_time or "unscheduled",
                 }
-                for task in selected_pet.tasks
+                for task in sorted_tasks
             ]
         )
     else:
@@ -99,14 +102,34 @@ if st.button("Generate schedule"):
         scheduler = Scheduler(owner=owner, target_date=date.today())
         scheduler.update_constraints(ScheduleConstraints(available_minutes=120))
         scheduler.generate_plan()
+
+        conflicts = scheduler.find_time_conflicts()
+        if conflicts:
+            st.warning("Potential time conflicts detected:")
+            for first_task, second_task in conflicts:
+                st.write(
+                    f"- {first_task.title} and {second_task.title} both start at "
+                    f"{first_task.preferred_start_time}."
+                )
+
         st.markdown("### Today's Schedule")
+        st.success("Schedule generated successfully.")
         st.text(scheduler.explain_plan())
         st.markdown("### Planned Tasks by Pet")
         for pet in owner.pets:
             pet_tasks = [task for task in scheduler.planned_tasks if task in pet.tasks]
             if pet_tasks:
                 st.markdown(f"**{pet.name}**")
-                for task in pet_tasks:
-                    st.write(f"- {task.summary()}")
+                st.table(
+                    [
+                        {
+                            "task": task.title,
+                            "duration": task.duration_minutes,
+                            "priority": task.priority,
+                            "category": task.category,
+                        }
+                        for task in pet_tasks
+                    ]
+                )
             else:
-                st.write(f"**{pet.name}** - no planned tasks")
+                st.info(f"{pet.name} has no planned tasks.")

@@ -88,14 +88,51 @@ The scheduler now includes a few lightweight features that make daily pet care p
 | Conflict detection logic | `Scheduler.find_time_conflicts()` | Flags tasks that share the same date and preferred start time so obvious scheduling conflicts are visible. |
 | Recurring task logic | `Task.get_next_occurrence_date()`, `Task.create_next_occurrence()`, `Task.mark_complete()` | When a daily or weekly task is marked complete, the system creates the next occurrence automatically. |
 
-## 📸 Demo Walkthrough
+## � Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+PawPal+ combines a simple Streamlit interface with a scheduler backend that can sort, filter, and warn about conflicts.
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+### Main UI features
+- Add and manage owner and pet profiles.
+- Add care tasks with a title, duration, priority, category, and description.
+- View tasks for a selected pet in chronological order using the scheduler's sorting logic.
+- Generate a daily plan and review the tasks that were included.
+- See scheduler warnings when two tasks share the same preferred start time.
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+### Example workflow
+1. Open the app and enter owner details.
+2. Add a pet such as Buddy or Luna.
+3. Add tasks like a walk, feeding, or medication.
+4. Click Generate schedule to build today's plan.
+5. Review the sorted task list and any conflict warnings before using the plan.
+
+### Key Scheduler behaviors shown
+- Sorting by time: tasks are ordered by preferred start time.
+- Conflict warnings: duplicate start times are flagged for review.
+- Daily planning: the scheduler builds a feasible plan within the configured time budget.
+- Filtering: pending tasks can be shown for a specific pet.
+
+### Sample CLI output
+```text
+--- TODAY'S SCHEDULE ---
+Daily plan for Aaron on 2026-07-04:
+- Give Medicine (medical) - 5 min, priority=high, frequency=once, date=2026-07-04, status=pending
+- Feed Breakfast (feeding) - 10 min, priority=high, frequency=once, date=2026-07-04, status=pending
+- Morning Walk (exercise) - 30 min, priority=high, frequency=once, date=2026-07-04, status=pending
+- Grooming (grooming) - 15 min, priority=medium, frequency=once, date=2026-07-04, status=pending
+Total planned duration: 60 minutes
+
+Tasks sorted by preferred time:
+ - Grooming at 08:00:00
+ - Morning Walk at 08:00:00
+ - Feed Breakfast at 12:30:00
+ - Give Medicine at 20:00:00
+
+Pending tasks for Buddy:
+ - Morning Walk (exercise) - 30 min, priority=high, frequency=once, date=2026-07-04, status=pending
+ - Feed Breakfast (feeding) - 10 min, priority=high, frequency=once, date=2026-07-04, status=pending
+ - Grooming (grooming) - 15 min, priority=medium, frequency=once, date=2026-07-04, status=pending
+
+Warning: time conflicts detected!
+ - Morning Walk and Grooming both start at 08:00:00
+```
